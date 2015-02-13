@@ -45,9 +45,13 @@ public class Server implements Runnable {
 			    if (clientMsg.equalsIgnoreCase("create")) {
 				}else if (clientMsg.equalsIgnoreCase("edit")) {
 				}else if (clientMsg.equalsIgnoreCase("delete")) {
-				}else if (clientMsg.equalsIgnoreCase("print")){
+				}else if (clientMsg.equalsIgnoreCase("read")){
+					out.println("Type the name of the patient:");
+						if ((clientMsg = in.readLine()) != null) {
+							
+						}
 				}else if (clientMsg.equalsIgnoreCase("help")){
-					out.println("Commands are as follows: create, edit, delete, print and help");
+					out.println("Commands are as follows: create, edit, delete, read and help");
 				}else{
 					out.println("Invalid command, type help for help!");                
 				}
