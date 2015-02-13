@@ -27,6 +27,10 @@ public class Journal {
         }
     }
 
+    public User getPatient() {
+        return patient;
+    }
+
     public void addTreater(User currentUser, User treater) {
         if (currentUser.isDoctor()) {
             autherized.add(treater);

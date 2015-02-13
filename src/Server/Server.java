@@ -1,35 +1,38 @@
 package src.Server;
 
-import java.io.*;
-import java.net.*;
-import java.security.KeyStore;
-import javax.net.*;
+import javax.net.ServerSocketFactory;
 import javax.net.ssl.*;
 import javax.security.cert.X509Certificate;
+import java.io.*;
+import java.net.ServerSocket;
+import java.security.KeyStore;
+import java.util.ArrayList;
 
 public class Server implements Runnable {
     private ServerSocket serverSocket = null;
     private static int numConnectedClients = 0;
+    private ArrayList<Journal> database;
 
     public Server(ServerSocket ss) throws IOException {
         serverSocket = ss;
         newListener();
+        database = new ArrayList<Journal>();
     }
 
     public void run() {
         try {
-            SSLSocket socket=(SSLSocket)serverSocket.accept();
+            SSLSocket socket = (SSLSocket) serverSocket.accept();
             newListener();
             SSLSession session = socket.getSession();
-            X509Certificate cert = (X509Certificate)session.getPeerCertificateChain()[0];
-            String subject = cert.getSubjectDN().getName();    	    
-			String issuer = cert.getIssuerDN().getName();
-			numConnectedClients++;
+            X509Certificate cert = (X509Certificate) session.getPeerCertificateChain()[0];
+            String subject = cert.getSubjectDN().getName();
+            String issuer = cert.getIssuerDN().getName();
+            numConnectedClients++;
             System.out.println("client connected");
             System.out.println("client name (cert subject DN field): " + subject);
-			
-			System.out.println("certifcate issuername: " + issuer +"\n");
-			System.out.println("certicate serialnumber: " + cert.getSerialNumber() + "\n");
+
+            System.out.println("certifcate issuername: " + issuer + "\n");
+            System.out.println("certicate serialnumber: " + cert.getSerialNumber() + "\n");
             System.out.println(numConnectedClients + " concurrent connection(s)\n");
 
             PrintWriter out = null;
@@ -39,27 +42,29 @@ public class Server implements Runnable {
 
             String clientMsg = null;
             while ((clientMsg = in.readLine()) != null) {
-			    String rev = new StringBuilder(clientMsg).reverse().toString();
+                String rev = new StringBuilder(clientMsg).reverse().toString();
                 System.out.println("received '" + clientMsg + "' from client");
                 System.out.print("sending '" + rev + "' to client...");
-				out.println(rev);
-				out.flush();
+                out.println(rev);
+                out.flush();
                 System.out.println("done\n");
-			}
-			in.close();
-			out.close();
-			socket.close();
-    	    numConnectedClients--;
+            }
+            in.close();
+            out.close();
+            socket.close();
+            numConnectedClients--;
             System.out.println("client disconnected");
             System.out.println(numConnectedClients + " concurrent connection(s)\n");
-		} catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Client died: " + e.getMessage());
             e.printStackTrace();
             return;
         }
     }
 
-    private void newListener() { (new Thread(this)).start(); } // calls run()
+    private void newListener() {
+        (new Thread(this)).start();
+    } // calls run()
 
     public static void main(String args[]) {
         System.out.println("\nServer Started\n");
@@ -71,7 +76,7 @@ public class Server implements Runnable {
         try {
             ServerSocketFactory ssf = getServerSocketFactory(type);
             ServerSocket ss = ssf.createServerSocket(port);
-            ((SSLServerSocket)ss).setNeedClientAuth(true); // enables client authentication
+            ((SSLServerSocket) ss).setNeedClientAuth(true); // enables client authentication
             new Server(ss);
         } catch (IOException e) {
             System.out.println("Unable to start Server: " + e.getMessage());
@@ -87,7 +92,7 @@ public class Server implements Runnable {
                 KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
                 TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
                 KeyStore ks = KeyStore.getInstance("JKS");
-				KeyStore ts = KeyStore.getInstance("JKS");
+                KeyStore ts = KeyStore.getInstance("JKS");
                 char[] password = "password".toCharArray();
 
                 ks.load(new FileInputStream("serverkeystore"), password);  // keystore password (storepass)
@@ -104,5 +109,26 @@ public class Server implements Runnable {
             return ServerSocketFactory.getDefault();
         }
         return null;
+    }
+
+    private void createJournal(User currentUser, Patient patient) {
+        if (currentUser.isDoctor()) {
+            Journal newJournal = new Journal(patient);
+            database.add(newJournal);
+        }
+    }
+
+    private void deleteJournal(User currentUser, Patient patient) {
+        if (currentUser.isGovernment()) {
+            Journal tmp = null;
+            for (int i = 0; i < database.size(); i++) {
+                if (database.get(i).getPatient().toString().compareTo(patient.toString()) == 0) {
+                    tmp = database.get(i);
+                }
+            }
+            if (tmp != null) {
+                database.remove(tmp);
+            }
+        }
     }
 }
