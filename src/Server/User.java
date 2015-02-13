@@ -22,10 +22,11 @@ public abstract class User {
         return division;
     }
 
+    public abstract boolean isDoctor();
 
     public abstract boolean isStaff();
 
-    public abstract boolean isTreatedBy();
+    public abstract boolean isTreatedBy(User u);
 
     public abstract boolean isGovernment();
 
