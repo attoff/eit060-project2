@@ -45,4 +45,11 @@ public class Journal {
 			return false;
 		}
 	}
+	private getDeletePermit(User currentUser){
+		if (currentUser.isGovernment()){
+			return true;
+		}else{
+			return false;
+		}
+	}
 }
