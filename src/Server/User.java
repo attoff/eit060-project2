@@ -26,8 +26,6 @@ public abstract class User {
 
     public abstract boolean isStaff();
 
-    public abstract boolean isTreatedBy(User u);
-
     public abstract boolean isGovernment();
 
     public boolean equals(User p) {

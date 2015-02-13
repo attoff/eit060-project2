@@ -19,11 +19,6 @@ public class Government extends User {
     }
 
     @Override
-    public boolean isTreatedBy(User u) {
-        return false;
-    }
-
-    @Override
     public boolean isGovernment() {
         return true;
     }

@@ -1,13 +1,17 @@
 package src.Server;
 
+import java.util.ArrayList;
+
 /**
  * Created by Viktor on 2015-02-13.
  */
 public class Journal {
     private Patient patient; //the Journal is about this patient!
+    private ArrayList<JournalEntry> entries;
+    private ArrayList<User> autherized;
 
-    public Journal() {
-
+    public Journal(Patient patient) {
+        this.patient = patient;
     }
 
     /**
@@ -15,20 +19,49 @@ public class Journal {
      *
      * @
      */
-    public addEntry(JournalEntry newEntry) {
-        if (getWritePermit(newEntry.getUser())) {
-            list.add(newEntry);
+    public void addEntry(JournalEntry newEntry) {
+        if (getCreatePermit(newEntry.getUser())) {
+            entries.add(newEntry);
         } else {
             System.out.println("You are not authorized to add entries to this journal");
         }
     }
 
-    public JournalEntry readEntry(/*something to specify entry?*/ User u) {
-        return null;
+    public void addTreater(User currentUser, User treater) {
+        if (currentUser.isDoctor()) {
+            autherized.add(treater);
+        }
+        System.out.println("You are not authorized to add a treater to this patient");
+    }
+
+
+    public StringBuilder readJournal(User currentUser, User reader) {
+        /*Kolla readpermit, släng ut allt i entries */
+        StringBuilder sb = new StringBuilder();
+        if (getReadPermit(currentUser)) {
+            for (JournalEntry entry : entries) {
+                sb.append(entry.toString());
+            }
+            return sb;
+        }
+        sb.append("Ni får ej läsa denna journal");
+        return sb;
     }
 
     public void deleteJournal(User u) {
+        /*kolla government, getdeletepermit. flytta till server. */
     }
+
+
+    private boolean isTreatedBy(User u) {
+        for (User user : autherized) {
+            if (user.getID().compareTo(u.getID()) == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private boolean getReadPermit(User currentUser) {
         if (currentUser.equals(patient)) {
@@ -43,18 +76,25 @@ public class Journal {
     }
 
     private boolean getWritePermit(User currentUser) {
-        if (patient.isTreatedBy(currentUser) {
+        if (isTreatedBy(currentUser)) {
             return true;
         }
         return false;
 
     }
 
-    private boolean sgetDeletePermit(User currentUser) {
+    private boolean getDeletePermit(User currentUser) {
         if (currentUser.isGovernment()) {
             return true;
         } else {
             return false;
         }
+    }
+
+    private boolean getCreatePermit(User currentUser) {
+        if (currentUser.isDoctor()) {
+            return true;
+        }
+        return false;
     }
 }
