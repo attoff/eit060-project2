@@ -44,18 +44,13 @@ public class Journal {
         StringBuilder sb = new StringBuilder();
         if (getReadPermit(currentUser)) {
             for (JournalEntry entry : entries) {
-                sb.append(entry.toString());
+                sb.append(entry.toString() + "\n");
             }
             return sb;
         }
         sb.append("Ni får ej läsa denna journal");
         return sb;
     }
-
-    public void deleteJournal(User u) {
-        /*kolla government, getdeletepermit. flytta till server. */
-    }
-
 
     private boolean isTreatedBy(User u) {
         for (User user : autherized) {
@@ -85,14 +80,6 @@ public class Journal {
         }
         return false;
 
-    }
-
-    private boolean getDeletePermit(User currentUser) {
-        if (currentUser.isGovernment()) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     private boolean getCreatePermit(User currentUser) {

@@ -56,11 +56,11 @@ public class Server implements Runnable {
 					out.println("Invalid command, type help for help!");                
 				}
 //				String rev = new StringBuilder(clientMsg).reverse().toString();
-  //              System.out.println("received '" + clientMsg + "' from client");
-    //            System.out.print("sending '" + rev + "' to client...");
-      //          out.println(rev);
+                //              System.out.println("received '" + clientMsg + "' from client");
+                //            System.out.print("sending '" + rev + "' to client...");
+                //          out.println(rev);
                 out.flush();
-        //        System.out.println("done\n");
+                //        System.out.println("done\n");
             }
             in.close();
             out.close();
@@ -135,7 +135,7 @@ public class Server implements Runnable {
         if (currentUser.isGovernment()) {
             Journal tmp = null;
             for (int i = 0; i < database.size(); i++) {
-                if (database.get(i).getPatient().toString().compareTo(patient.toString()) == 0) {
+                if (database.get(i).getPatient().getID().compareTo(patient.getID()) == 0) {
                     tmp = database.get(i);
                 }
             }
