@@ -42,19 +42,19 @@ public class Server implements Runnable {
 
             String clientMsg = null;
             while ((clientMsg = in.readLine()) != null) {
-			    if (clientMsg.equalsIgnoreCase("create")) {
-				}else if (clientMsg.equalsIgnoreCase("edit")) {
-				}else if (clientMsg.equalsIgnoreCase("delete")) {
-				}else if (clientMsg.equalsIgnoreCase("read")){
-					out.println("Type the name of the patient:");
-						if ((clientMsg = in.readLine()) != null) {
-							
-						}
-				}else if (clientMsg.equalsIgnoreCase("help")){
-					out.println("Commands are as follows: create, edit, delete, read and help");
-				}else{
-					out.println("Invalid command, type help for help!");                
-				}
+                if (clientMsg.equalsIgnoreCase("create")) {
+                } else if (clientMsg.equalsIgnoreCase("edit")) {
+                } else if (clientMsg.equalsIgnoreCase("delete")) {
+                } else if (clientMsg.equalsIgnoreCase("read")) {
+                    out.println("Type the name of the patient:");
+                    if ((clientMsg = in.readLine()) != null) {
+
+                    }
+                } else if (clientMsg.equalsIgnoreCase("help")) {
+                    out.println("Commands are as follows: create, edit, delete, read and help");
+                } else {
+                    out.println("Invalid command, type help for help!");
+                }
 //				String rev = new StringBuilder(clientMsg).reverse().toString();
                 //              System.out.println("received '" + clientMsg + "' from client");
                 //            System.out.print("sending '" + rev + "' to client...");
@@ -133,15 +133,18 @@ public class Server implements Runnable {
 
     private void deleteJournal(User currentUser, Patient patient) {
         if (currentUser.isGovernment()) {
-            Journal tmp = null;
-            for (int i = 0; i < database.size(); i++) {
-                if (database.get(i).getPatient().getID().compareTo(patient.getID()) == 0) {
-                    tmp = database.get(i);
-                }
-            }
-            if (tmp != null) {
-                database.remove(tmp);
+            Journal tmp = findJournal(patient);
+            database.remove(tmp);
+        }
+    }
+
+
+    private Journal findJournal(User patient) {
+        for (int i = 0; i < database.size(); i++) {
+            if (database.get(i).getPatient().getID().compareTo(patient.getID()) == 0) {
+                return database.get(i);
             }
         }
+        return null;
     }
 }
