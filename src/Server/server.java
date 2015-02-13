@@ -7,11 +7,11 @@ import javax.net.*;
 import javax.net.ssl.*;
 import javax.security.cert.X509Certificate;
 
-public class server implements Runnable {
+public class Server implements Runnable {
     private ServerSocket serverSocket = null;
     private static int numConnectedClients = 0;
 
-    public server(ServerSocket ss) throws IOException {
+    public Server(ServerSocket ss) throws IOException {
         serverSocket = ss;
         newListener();
     }
@@ -72,7 +72,7 @@ public class server implements Runnable {
             ServerSocketFactory ssf = getServerSocketFactory(type);
             ServerSocket ss = ssf.createServerSocket(port);
             ((SSLServerSocket)ss).setNeedClientAuth(true); // enables client authentication
-            new server(ss);
+            new Server(ss);
         } catch (IOException e) {
             System.out.println("Unable to start Server: " + e.getMessage());
             e.printStackTrace();
@@ -82,7 +82,7 @@ public class server implements Runnable {
     private static ServerSocketFactory getServerSocketFactory(String type) {
         if (type.equals("TLS")) {
             SSLServerSocketFactory ssf = null;
-            try { // set up key manager to perform Server authentication
+            try { // set up key manager to perform server authentication
                 SSLContext ctx = SSLContext.getInstance("TLS");
                 KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
                 TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");

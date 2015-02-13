@@ -1,9 +1,9 @@
 package src.Client;
 
+import java.net.*;
+import java.io.*;
 import javax.net.ssl.*;
 import javax.security.cert.X509Certificate;
-import java.io.*;
-import java.net.*;
 import java.security.KeyStore;
 import java.security.cert.*;
 
@@ -12,10 +12,10 @@ import java.security.cert.*;
  * authentication.
  *
  * This program assumes that the client is not inside a firewall.
- * The application can be modified to connect to a Server outside
+ * The application can be modified to connect to a server outside
  * the firewall by following SSLSocketClientWithTunneling.java.
  */
-public class client {
+public class Client {
 
     public static void main(String[] args) throws Exception {
         String host = null;
@@ -45,15 +45,15 @@ public class client {
                 TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
                 SSLContext ctx = SSLContext.getInstance("TLS");
                 ks.load(new FileInputStream("clientkeystore"), password);  // keystore password (storepass)
-                ts.load(new FileInputStream("clienttruststore"), password); // truststore password (storepass);
-                kmf.init(ks, password); // user password (keypass)
-                tmf.init(ts); // keystore can be used as truststore here
-                ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+				ts.load(new FileInputStream("clienttruststore"), password); // truststore password (storepass);
+				kmf.init(ks, password); // user password (keypass)
+				tmf.init(ts); // keystore can be used as truststore here
+				ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
                 factory = ctx.getSocketFactory();
             } catch (Exception e) {
                 throw new IOException(e.getMessage());
             }
-            SSLSocket socket = (SSLSocket) factory.createSocket(host, port);
+            SSLSocket socket = (SSLSocket)factory.createSocket(host, port);
             System.out.println("\nsocket before handshake:\n" + socket + "\n");
 
             /*
@@ -65,12 +65,12 @@ public class client {
             socket.startHandshake();
 
             SSLSession session = socket.getSession();
-            X509Certificate cert = (X509Certificate) session.getPeerCertificateChain()[0];
+            X509Certificate cert = (X509Certificate)session.getPeerCertificateChain()[0];
             String subject = cert.getSubjectDN().getName();
-            String issuer = cert.getIssuerDN().getName();
-            System.out.println("certificate name (subject DN field) on certificate received from Server:\n" + subject + "\n");
-            System.out.println("certifcate issuername: " + issuer + "\n");
-            System.out.println("certicate serialnumber: " + cert.getSerialNumber() + "\n");
+			String issuer = cert.getIssuerDN().getName();
+            System.out.println("certificate name (subject DN field) on certificate received from server:\n" + subject + "\n");
+			System.out.println("certifcate issuername: " + issuer +"\n");
+			System.out.println("certicate serialnumber: " + cert.getSerialNumber() + "\n");
             System.out.println("socket after handshake:\n" + socket + "\n");
             System.out.println("secure connection established\n\n");
 
@@ -78,22 +78,22 @@ public class client {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String msg;
-            for (; ; ) {
+			for (;;) {
                 System.out.print(">");
                 msg = read.readLine();
                 if (msg.equalsIgnoreCase("quit")) {
-                    break;
-                }
-                System.out.print("sending '" + msg + "' to Server...");
+				    break;
+				}
+                System.out.print("sending '" + msg + "' to server...");
                 out.println(msg);
                 out.flush();
                 System.out.println("done");
 
-                System.out.println("received '" + in.readLine() + "' from Server\n");
+                System.out.println("received '" + in.readLine() + "' from server\n");
             }
             in.close();
-            out.close();
-            read.close();
+			out.close();
+			read.close();
             socket.close();
         } catch (Exception e) {
             e.printStackTrace();
