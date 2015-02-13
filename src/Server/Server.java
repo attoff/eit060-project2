@@ -42,12 +42,20 @@ public class Server implements Runnable {
 
             String clientMsg = null;
             while ((clientMsg = in.readLine()) != null) {
-                String rev = new StringBuilder(clientMsg).reverse().toString();
-                System.out.println("received '" + clientMsg + "' from client");
-                System.out.print("sending '" + rev + "' to client...");
-                out.println(rev);
+			    if (clientMsg.equalsIgnoreCase("create")) {
+				}else if (clientMsg.equalsIgnoreCase("edit")) {
+				}else if (clientMsg.equalsIgnoreCase("delete")) {
+				}else if (clientMsg.equalsIgnoreCase("print")){
+				}else if (clientMsg.equalsIgnoreCase("help")){
+				}else{
+					out.println("Invalid command, type help for help!");                
+				}
+//				String rev = new StringBuilder(clientMsg).reverse().toString();
+  //              System.out.println("received '" + clientMsg + "' from client");
+    //            System.out.print("sending '" + rev + "' to client...");
+      //          out.println(rev);
                 out.flush();
-                System.out.println("done\n");
+        //        System.out.println("done\n");
             }
             in.close();
             out.close();
