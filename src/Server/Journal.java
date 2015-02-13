@@ -9,7 +9,7 @@ public class Journal {
     public Journal() {
 
     }
-//
+
 //    /**
 //     * Method for adding an entry to the Journal, should only be accesible by a nurse or doctor.
 //     *
