@@ -1,0 +1,8 @@
+.recommenders
+RemoteSystemsTempFiles
+.project
+.metadata
+*.zip
+/src/bin
+.settings
+*.grn
