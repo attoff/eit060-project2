@@ -12,11 +12,14 @@ public class Server implements Runnable {
     private ServerSocket serverSocket = null;
     private static int numConnectedClients = 0;
     private ArrayList<Journal> database;
+	private ArrayList<User> users;
 
     public Server(ServerSocket ss) throws IOException {
         serverSocket = ss;
         newListener();
         database = new ArrayList<Journal>();
+		users = new ArrayList<User>();
+		users.addAll(UserGenerator.generate());
     }
 
     public void run() {
@@ -29,7 +32,7 @@ public class Server implements Runnable {
             String issuer = cert.getIssuerDN().getName();
             numConnectedClients++;
             System.out.println("client connected");
-            System.out.println("client name (cert subject DN field): " + subject);
+            //System.out.println("client name (cert subject DN field): " + subject);
 
             System.out.println("certifcate issuername: " + issuer + "\n");
             System.out.println("certicate serialnumber: " + cert.getSerialNumber() + "\n");
