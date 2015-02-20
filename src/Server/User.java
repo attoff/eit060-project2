@@ -34,4 +34,8 @@ public abstract class User {
         }
         return false;
     }
+
+    public String toString() {
+        return "ID: " + id + ", " + "Division: " + division + "\n";
+    }
 }

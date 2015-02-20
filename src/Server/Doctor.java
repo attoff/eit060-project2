@@ -13,7 +13,6 @@ public class Doctor extends User {
         return true;
     }
 
-
     @Override
     public boolean isStaff() {
         return true;

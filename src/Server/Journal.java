@@ -12,6 +12,8 @@ public class Journal {
 
     public Journal(Patient patient) {
         this.patient = patient;
+        autherized = new ArrayList<User>();
+        entries = new ArrayList<JournalEntry>();
     }
 
     /**
@@ -83,9 +85,17 @@ public class Journal {
     }
 
     private boolean getCreatePermit(User currentUser) {
-        if (currentUser.isDoctor()) {
+        if (currentUser.isStaff()) {
             return true;
         }
         return false;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (JournalEntry entry : entries) {
+            sb.append(entry.toString() + "\n");
+        }
+        return sb.toString();
     }
 }

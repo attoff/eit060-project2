@@ -1,10 +1,7 @@
 package src.Server;
 
-import java.util.ArrayList;
-
 public class JournalEntry {
-    private ArrayList<User> contributers = new ArrayList<User>();
-    private User latestChanger;
+    private User creater;
     private StringBuilder notes;
 
 
@@ -13,19 +10,22 @@ public class JournalEntry {
 
      */
     public JournalEntry(User user) {
-        this.latestChanger = user;
-        contributers.add(user);
+        this.creater = user;
     }
 
     public String getUserDivision() {
-        return latestChanger.getDivision();
+        return creater.getDivision();
     }
 
     public String getUserID() {
-        return latestChanger.getID();
+        return creater.getID();
     }
 
-    public User getUser(){
-        return latestChanger;
+    public User getUser() {
+        return creater;
+    }
+
+    public String toString() {
+        return creater.toString() + ", Note: " + notes;
     }
 }
