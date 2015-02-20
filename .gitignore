@@ -9,3 +9,4 @@ RemoteSystemsTempFiles
 .classpath
 bin
 src./classpath
+.Rhistory
