@@ -12,5 +12,6 @@ public class UserGenerator{
 		User nurse = new Nurse("Nurse", "First");
 		tmp.add(doctor);
 		tmp.add(nurse);
+		return tmp;
 	}
 }

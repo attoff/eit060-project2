@@ -6,3 +6,6 @@ RemoteSystemsTempFiles
 /src/bin
 .settings
 *.grn
+.classpath
+bin
+src./classpath
