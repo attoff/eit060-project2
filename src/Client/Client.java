@@ -6,7 +6,8 @@ import javax.net.ssl.*;
 import javax.security.cert.X509Certificate;
 import java.security.KeyStore;
 import java.security.cert.*;
-
+/*@TODO
+make sure to check servers cert!
 /*
  * This example shows how to set up a key manager to perform client
  * authentication.
@@ -85,8 +86,9 @@ public class Client {
 					System.out.println("received '" + str + "' from server\n");
 					str =in.readLine();
 				}
+				out.println("Read, done await command");
 //                System.out.println("done");
-                System.out.print(">");
+                System.out.print("\n>");
                 msg = read.readLine();
                 if (msg.equalsIgnoreCase("quit")) {
 				    break;

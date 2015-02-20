@@ -58,38 +58,33 @@ public class Server implements Runnable {
 				out.println("No such user," + currentUserName
 						+ " connection closed");
 			}
+			
 			String clientMsg = null;
-			 while ((clientMsg = in.readLine()) != null) {
-			 if (clientMsg.equalsIgnoreCase("create")) {
-			 } else if (clientMsg.equalsIgnoreCase("edit")) {
-			 } else if (clientMsg.equalsIgnoreCase("delete")) {
-			 } else if (clientMsg.equalsIgnoreCase("read")) {
-			 out.println("Type the name of the patient:");
-			 if ((clientMsg = in.readLine()) != null) {
-			 if(findUser(clientMsg) != null){
-			 User patient = findUser(clientMsg);
-			 out.print(findJournal(patient).readJournal(patient,
-			 currentUser));
-			 }
-			 }
-			 } else if (clientMsg.equalsIgnoreCase("help")) {
-			 out.println("Commands are as follows: create, edit, delete, read and help");
-			 } else {
-			 out.println("Invalid command, type help for help!");
-			 }
-			 // String rev = new
-			 // StringBuilder(clientMsg).reverse().toString();
-			 // System.out.println("received '" + clientMsg +
-			 // "' from client");
-			 // System.out.print("sending '" + rev + "' to client...");
-			 // out.println(rev);
-			 out.flush();
-			 // System.out.println("done\n");
-			 }
-			for (int i = 0; i < 10; i++) {
-				out.println("HI" + i);
+			while ((clientMsg = in.readLine()) != null) {
+				out.println("test");
+				if (clientMsg.equalsIgnoreCase("create")) {
+				} else if (clientMsg.equalsIgnoreCase("edit")) {
+				} else if (clientMsg.equalsIgnoreCase("delete")) {
+				} else if (clientMsg.equalsIgnoreCase("read")) {
+					out.println("Type the name of the patient:");
+					if ((clientMsg = in.readLine()) != null) {
+						if (findUser(clientMsg) != null) {
+							User patient = findUser(clientMsg);
+							out.print(findJournal(patient).readJournal(patient,
+									currentUser));
+						}
+					}
+				} else if (clientMsg.equalsIgnoreCase("help")) {
+					out.println("Commands are as follows: create, edit, delete, read and help");
+				} else {
+					out.println("Invalid command, type help for help!");
+				}
+				out.flush();
 			}
-			out.println("Exit");
+//			for (int i = 0; i < 10; i++) {
+//				out.println("HI" + i);
+//			}
+//			out.println("Exit");
 			in.close();
 			out.close();
 			socket.close();
