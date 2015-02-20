@@ -13,14 +13,6 @@ public class JournalEntry {
         this.creater = user;
     }
 
-    public String getUserDivision() {
-        return creater.getDivision();
-    }
-
-    public String getUserID() {
-        return creater.getID();
-    }
-
     public User getUser() {
         return creater;
     }
