@@ -39,17 +39,17 @@ public class Journal {
     }
 
 
-    public StringBuilder readJournal(User currentUser, User reader) {
+    public String readJournal(User patient, User reader) {
         /*Kolla readpermit, släng ut allt i entries */
         StringBuilder sb = new StringBuilder();
-        if (getReadPermit(currentUser)) {
+        if (getReadPermit(patient)) {
             for (JournalEntry entry : entries) {
                 sb.append(entry.toString() + "\n");
             }
-            return sb;
+            return sb.toString();
         }
         sb.append("Ni får ej läsa denna journal");
-        return sb;
+        return sb.toString();
     }
 
     private boolean isTreatedBy(User u) {
