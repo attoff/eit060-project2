@@ -10,3 +10,4 @@ RemoteSystemsTempFiles
 bin
 src./classpath
 .Rhistory
+.DS_Store
