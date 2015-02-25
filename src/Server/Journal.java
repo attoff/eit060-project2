@@ -85,7 +85,7 @@ public class Journal {
     }
 
     private boolean getCreatePermit(User currentUser) {
-        if (currentUser.isStaff()) {
+        if (currentUser.isDoctor()) {
             return true;
         }
         return false;

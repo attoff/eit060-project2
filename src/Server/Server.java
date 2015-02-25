@@ -158,6 +158,7 @@ public class Server implements Runnable {
 	private void createJournal(User currentUser, Patient patient) {
 		if (currentUser.isDoctor()) {
 			Journal newJournal = new Journal(patient);
+            newJournal.addTreater(currentUser, currentUser);
 			database.add(newJournal);
 		}
 	}
