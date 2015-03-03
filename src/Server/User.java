@@ -19,7 +19,6 @@ public abstract class User implements Serializable {
         return id;
     }
 
-
     public String getDivision() {
         return division;
     }
