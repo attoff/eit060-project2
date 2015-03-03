@@ -1,11 +1,12 @@
 package src.Server;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Viktor on 2015-02-13.
  */
-public class Journal {
+public class Journal implements Serializable{
     private Patient patient; //the Journal is about this patient!
     private ArrayList<JournalEntry> entries;
     private ArrayList<User> autherized;

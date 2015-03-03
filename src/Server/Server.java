@@ -18,9 +18,44 @@ public class Server implements Runnable {
 
 	public Server(ServerSocket ss) throws IOException {
 		serverSocket = ss;
+		try {
+			File file = new File("users");
+			// if file doesnt exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
+				users = new HashMap<String, User>();
+			}
+			file = new File("journals");
+			// if file doesnt exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
+				journals = new HashMap<String, Journal>();
+			}
+			file = null;
+			try {
+				FileInputStream fis = new FileInputStream("journals");
+				ObjectInputStream ois = new ObjectInputStream(fis);
+				journals = (HashMap<String, Journal>) ois.readObject();
+				ois.close();
+				fis.close();
+			} catch (EOFException e) {
+				System.out.println("jurnals was empty, nothing loaded");
+				journals = new HashMap<String, Journal>();
+			}
+			try {
+				FileInputStream fis = new FileInputStream("users");
+				ObjectInputStream ois = new ObjectInputStream(fis);
+				users = (HashMap<String, User>) ois.readObject();
+				ois.close();
+				fis.close();
+			} catch (EOFException e) {
+				System.out.println("users was empty, nothing loaded");
+				users = new HashMap<String, User>();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		newListener();
-		journals = new HashMap<String, Journal>();
-		users = new HashMap<String, User>();
 	}
 
 	public void run() {
@@ -63,7 +98,7 @@ public class Server implements Runnable {
 			String clientMsg = null;
 			while ((clientMsg = in.readLine()) != null) {
 				if (clientMsg.equalsIgnoreCase("create")) {
-					out.println("Type the name of the new patient:");
+					out.println("Type the social security number of the new patient:");
 					if ((clientMsg = in.readLine()) != null) {
 						if (findUser(clientMsg) == null) {
 							if (currentUser.isDoctor() == true) {
@@ -71,16 +106,20 @@ public class Server implements Runnable {
 										clientMsg, currentUser.getDivision()));
 								log(currentUser + " created a new journal for "
 										+ clientMsg);
+								out.println("A journal for " + clientMsg
+										+ " was created");
 							} else {
 								out.println("You are not permitted to do this action");
-								log(currentUser + " tried to create a journal for " + clientMsg + " , not allowed");
+								log(currentUser
+										+ " tried to create a journal for "
+										+ clientMsg + " , but was not allowed");
 							}
 						} else {
 							out.println("User could not be found");
 						}
 					}
 				} else if (clientMsg.equalsIgnoreCase("edit")) {
-					out.println("Type the name of the patient you want to edit:");
+					out.println("Type the social security number of the patient you want to edit:");
 					if ((clientMsg = in.readLine()) != null) {
 						if (findUser(clientMsg) != null) {
 							User patient = findUser(clientMsg);
@@ -90,7 +129,8 @@ public class Server implements Runnable {
 								patientJournal.addEntry(new JournalEntry(
 										currentUser, clientMsg));
 								log(currentUser + " created a new note for "
-										+ clientMsg);
+										+ patient);
+								out.println("Note added for patient " + patient);
 							} else {
 								out.println("Message was empty, no note was added");
 							}
@@ -99,19 +139,20 @@ public class Server implements Runnable {
 						}
 					}
 				} else if (clientMsg.equalsIgnoreCase("delete")) {
-					out.println("Type the name of the patient, which journal you would like to delete:");
+					out.println("Type the social security number of the patient, which journal you would like to delete:");
 					if ((clientMsg = in.readLine()) != null) {
 						if (findUser(clientMsg) != null) {
 							deleteJournal(currentUser,
 									(Patient) findUser(clientMsg));
 							log(currentUser + " deleted " + clientMsg
-									+ " journal");
+									+ "'s journal");
+							out.println("Deleted " + clientMsg + "'s journal");
 						} else {
 							out.println("User could not be found");
 						}
 					}
 				} else if (clientMsg.equalsIgnoreCase("read")) {
-					out.println("Type the name of the patient:");
+					out.println("Type the social security number of the patient:");
 					if ((clientMsg = in.readLine()) != null) {
 						if (findUser(clientMsg) != null) {
 							User patient = findUser(clientMsg);
@@ -122,6 +163,9 @@ public class Server implements Runnable {
 					}
 				} else if (clientMsg.equalsIgnoreCase("help")) {
 					out.println("Commands are as follows: create, edit, delete, read and help. \n Use one of these commands and follow the intructions.");
+				} else if (clientMsg.equalsIgnoreCase("theinitstring")) {
+					init(currentUser);
+					out.println("tried to initialize");
 				} else {
 					out.println("Invalid command, type help for help!");
 				}
@@ -206,6 +250,12 @@ public class Server implements Runnable {
 			Journal newJournal = new Journal(patient);
 			newJournal.addTreater(currentUser, currentUser);
 			journals.put(currentUser.getID(), newJournal);
+			try {
+				save("journals");
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -213,10 +263,20 @@ public class Server implements Runnable {
 		if (currentUser.isGovernment()) {
 			journals.remove(patient.getID());
 		}
+		try {
+			save("journals");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private User findUser(String id) {
-		return users.get(id);
+		if (users.containsKey(id)) {
+			return users.get(id);
+		} else {
+			return null;
+		}
 	}
 
 	private Journal findJournal(User patient) {
@@ -238,6 +298,22 @@ public class Server implements Runnable {
 		return "";
 	}
 
+	private void init(User currentUser) {
+		if (!users.containsKey("Doctor Name")) {
+			Doctor name = new Doctor("Doctor Name", "0");
+			users.put("Doctor Name", name);
+			log("Server was initialized!");
+			try {
+				FileOutputStream fos = new FileOutputStream("users");
+				ObjectOutputStream oos = new ObjectOutputStream(fos);
+				oos.writeObject(users);
+				oos.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	/* Prints current time and the message to a file */
 	private static void log(String message) {
 		try {
@@ -256,6 +332,22 @@ public class Server implements Runnable {
 			pw.flush();
 			pw.close();
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void save(String fileName) throws FileNotFoundException {
+		try {
+			FileOutputStream fout = new FileOutputStream(fileName);
+			ObjectOutputStream oos = new ObjectOutputStream(fout);
+			if (fileName.compareTo("users") == 0) {
+				oos.writeObject(users);
+			} else if (fileName.compareTo("journals") == 0) {
+				oos.writeObject(journals);
+			}
+			fout.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

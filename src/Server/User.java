@@ -1,9 +1,11 @@
 package src.Server;
 
+import java.io.Serializable;
+
 /**
  * Created by Viktor on 2015-02-13.
  */
-public abstract class User {
+public abstract class User implements Serializable {
     String id;
     String division;
 

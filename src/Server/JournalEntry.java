@@ -1,6 +1,8 @@
 package src.Server;
 
-public class JournalEntry {
+import java.io.Serializable;
+
+public class JournalEntry implements Serializable{
     private User creater;
     private StringBuilder notes;
 
