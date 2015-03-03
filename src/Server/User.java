@@ -38,6 +38,6 @@ public abstract class User implements Serializable {
     }
 
     public String toString() {
-        return "ID: " + id + ", " + "Division: " + division + "\n";
+        return "ID: " + id + ", " + "Division: " + division;
     }
 }
