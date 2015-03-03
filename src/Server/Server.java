@@ -58,7 +58,7 @@ public class Server implements Runnable {
 				out.println("No such user," + currentUserName
 						+ " connection closed");
 			}
-			
+			log(currentUser.toString());
 			String clientMsg = null;
 			while ((clientMsg = in.readLine()) != null) {
 				out.println("test");
@@ -201,5 +201,20 @@ public class Server implements Runnable {
 			}
 		}
 		return "";
+	}
+	private static void log(String message){
+		try {
+			File file = new File("log.txt");
+ 			// if file doesnt exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+ 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(message);
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
