@@ -22,15 +22,11 @@ public class Journal {
      * @
      */
     public void addEntry(JournalEntry newEntry) {
-        if (getCreatePermit(newEntry.getUser())) {
+        if (getWritePermit(newEntry.getUser())) {
             entries.add(newEntry);
         } else {
             System.out.println("You are not authorized to add entries to this journal");
         }
-    }
-
-    public User getPatient() {
-        return patient;
     }
 
     public void addTreater(User currentUser, User treater) {
@@ -39,7 +35,6 @@ public class Journal {
         }
         System.out.println("You are not authorized to add a treater to this patient");
     }
-
 
     public String readJournal(User patient, User reader) {
         /*Kolla readpermit, släng ut allt i entries */
@@ -63,7 +58,6 @@ public class Journal {
         return false;
     }
 
-
     private boolean getReadPermit(User currentUser) {
         if (currentUser.equals(patient)) {
             return true;
@@ -82,13 +76,6 @@ public class Journal {
         }
         return false;
 
-    }
-
-    private boolean getCreatePermit(User currentUser) {
-        if (currentUser.isDoctor()) {
-            return true;
-        }
-        return false;
     }
 
     public String toString() {
