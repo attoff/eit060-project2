@@ -40,7 +40,7 @@ public class Client {
 		try { /* set up a key manager for client authentication */
 			SSLSocketFactory factory = null;
 			try {
-				char[] password = "password".toCharArray();
+				//char[] password = "password".toCharArray();
 				KeyStore ks = KeyStore.getInstance("JKS");
 				KeyStore ts = KeyStore.getInstance("JKS");
 				KeyManagerFactory kmf = KeyManagerFactory
@@ -48,13 +48,14 @@ public class Client {
 				TrustManagerFactory tmf = TrustManagerFactory
 						.getInstance("SunX509");
 				SSLContext ctx = SSLContext.getInstance("TLS");
-				ks.load(new FileInputStream("clientkeystore"), password); // keystore
-																			// password
-																			// (storepass)
-				ts.load(new FileInputStream("clienttruststore"), password); // truststore
+				char[] passwordArray = readPassword("Enter your secret password: ");
+				ks.load(new FileInputStream("clientkeystore"), passwordArray); // keystore
+																				// password
+																				// (storepass)
+				ts.load(new FileInputStream("clienttruststore"), passwordArray); // truststore
 																			// password
 																			// (storepass);
-				kmf.init(ks, password); // user password (keypass)
+				kmf.init(ks, passwordArray); // user password (keypass)
 				tmf.init(ts); // keystore can be used as truststore here
 				ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 				factory = ctx.getSocketFactory();
@@ -95,14 +96,14 @@ public class Client {
 			for (;;) {
 				// out.println("Client says hello!");
 				String str = in.readLine();
-				System.out.println("received '" + str + "' from server");
+				System.out.println("Recieved message from server:");
+				System.out.println(str);
 				while (in.ready()) {
 					str = in.readLine();
-					System.out.println("received '" + str + "' from server");
+					System.out.println(str);
 				}
-				System.out.println("Read done, please type your command");
-				// System.out.println("done");
-				System.out.print("\n>");
+				System.out.println("Please type your command");
+				System.out.print(">");
 				msg = read.readLine();
 				if (msg.equalsIgnoreCase("quit")) {
 					break;
@@ -118,6 +119,15 @@ public class Client {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private static char[] readPassword(String message) throws IOException {
+		if (System.console() != null) {
+			return System.console().readPassword(message);
+		}
+		System.out.println(message);
+		return new BufferedReader(new InputStreamReader(System.in)).readLine()
+				.toCharArray();
 	}
 
 }

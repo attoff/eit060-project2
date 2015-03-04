@@ -12,3 +12,5 @@ src./classpath
 .Rhistory
 .DS_Store
 log.txt
+journals
+users

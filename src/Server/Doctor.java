@@ -10,7 +10,8 @@ public class Doctor extends User {
 
     @Override
     public boolean isDoctor() {
-        return true;
+        System.out.println("the doctor is a lie");
+    	return true;
     }
 
     @Override
