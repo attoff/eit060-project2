@@ -107,6 +107,7 @@ public class Server implements Runnable {
 			out.flush();
 			String clientMsg = null;
 			while ((clientMsg = in.readLine()) != null) {
+				//command create with subcomands
 				if (clientMsg.equalsIgnoreCase("create")) {
 					out.println("Type the social security number of the new patient:");
 					if ((clientMsg = in.readLine()) != null) {
@@ -158,6 +159,7 @@ public class Server implements Runnable {
 							out.println("User could not be found");
 						}
 					}
+					//command edit with subcomands
 				} else if (clientMsg.equalsIgnoreCase("edit")) {
 					out.println("Type the social security number of the patient you want to edit:");
 					if ((clientMsg = in.readLine()) != null) {
@@ -204,6 +206,7 @@ public class Server implements Runnable {
 							out.println("User could not be found");
 						}
 					}
+					//command delete with subcommands
 				} else if (clientMsg.equalsIgnoreCase("delete")) {
 					out.println("Type the social security number of the patient, which journal you would like to delete:");
 					if ((clientMsg = in.readLine()) != null) {
@@ -217,6 +220,7 @@ public class Server implements Runnable {
 							out.println("User could not be found");
 						}
 					}
+					//command read with subcommands
 				} else if (clientMsg.equalsIgnoreCase("read")) {
 					out.println("Type the social security number of the patient:");
 					if ((clientMsg = in.readLine()) != null) {
@@ -233,14 +237,17 @@ public class Server implements Runnable {
 									+ clientMsg);
 						}
 					}
+					//comand help
 				} else if (clientMsg.equalsIgnoreCase("help")) {
 					out.println("Commands are as follows: create, edit, delete, read and help. \n Use one of these commands and follow the intructions.");
+				//command init, should only be doable once.
 				} else if (clientMsg.equalsIgnoreCase("init")) {
 					if (init(currentUser)) {
 						out.println("tried to initialize");
 					} else {
 						out.println("server is already initiated, you have been reported!");
 					}
+					//command createuser, can only be accesed with Doctor Name
 				} else if (clientMsg.equalsIgnoreCase("createuser")
 						&& currentUser.getID().compareTo("Doctor Name") == 0) {
 					out.println("Type the Id of the staffmember");
