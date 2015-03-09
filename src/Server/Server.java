@@ -122,9 +122,9 @@ public class Server implements Runnable {
 										+ clientMsg);
 								log(currentUser + " created a new journal for "
 										+ clientMsg);
-								out.println("A journal for " + clientMsg
+								out.print("A journal for " + clientMsg
 										+ " was created");
-								out.println("Do you want to add more treaters? Y/N");
+								out.println("\nDo you want to add more treaters? Y/N");
 								if ((clientMsg = in.readLine()) != null) {
 									if (clientMsg.equalsIgnoreCase("y")
 											|| clientMsg
@@ -239,7 +239,7 @@ public class Server implements Runnable {
 					}
 					//comand help
 				} else if (clientMsg.equalsIgnoreCase("help")) {
-					out.println("Commands are as follows: create, edit, delete, read and help. \n Use one of these commands and follow the intructions.");
+					out.println("Commands are as follows: create, edit, delete, read and help. \nUse one of these commands and follow the intructions.");
 				//command init, should only be doable once.
 				} else if (clientMsg.equalsIgnoreCase("init")) {
 					if (init(currentUser)) {
